@@ -21,7 +21,7 @@
 # MA 02111-1307 USA
 #
 
-CROSS_COMPILE ?= ppc_8xx-
+CROSS_COMPILE ?= powerpc-linux-
 
 CONFIG_STANDALONE_LOAD_ADDR ?= 0x40000
 LDFLAGS_FINAL += --gc-sections
