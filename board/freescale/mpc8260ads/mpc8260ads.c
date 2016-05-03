@@ -58,9 +58,21 @@
  * according to the five values podr/pdir/ppar/psor/pdat for that entry
  */
 
-#define CONFIG_SYS_FCC1 (CONFIG_ETHER_INDEX == 1)
-#define CONFIG_SYS_FCC2 (CONFIG_ETHER_INDEX == 2)
-#define CONFIG_SYS_FCC3 (CONFIG_ETHER_INDEX == 3)
+#ifdef CONFIG_ETHER_ON_FCC1
+#define CONFIG_SYS_FCC1	1
+#else
+#define CONFIG_SYS_FCC1	0
+#endif
+#ifdef CONFIG_ETHER_ON_FCC2
+#define CONFIG_SYS_FCC2	1
+#else
+#define CONFIG_SYS_FCC2	0
+#endif
+#ifdef CONFIG_ETHER_ON_FCC3
+#define CONFIG_SYS_FCC3	1
+#else
+#define CONFIG_SYS_FCC3	0
+#endif
 
 const iop_conf_t iop_conf_tab[4][32] = {
 
@@ -158,8 +170,8 @@ const iop_conf_t iop_conf_tab[4][32] = {
 #else
 	/* PC19 */ { CONFIG_SYS_FCC2,   1,   0,   0,   0,   0 }, /* FCC2 MII Rx Clock (CLK13) */
 	/* PC18 */ { CONFIG_SYS_FCC2,   1,   0,   0,   0,   0 }, /* FCC2 MII Tx Clock (CLK14) */
-	/* PC17 */ { 0,          0,   0,   0,   0,   0 }, /* PC17 */
-	/* PC16 */ { 0,          0,   0,   0,   0,   0 }, /* PC16 */
+	/* PC17 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII Rx Clock (CLK15) */
+	/* PC16 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC4 MII Tx Clock (CLK16) */
 #endif /* CONFIG_ADSTYPE == CONFIG_SYS_8272ADS */
 	/* PC15 */ { 0,          0,   0,   0,   0,   0 }, /* PC15 */
 	/* PC14 */ { 0,          0,   0,   0,   0,   0 }, /* PC14 */
@@ -206,10 +218,10 @@ const iop_conf_t iop_conf_tab[4][32] = {
 	/* PD14 */ {   1,   1,   1,   0,   1,   0   }, /* I2C SCL */
 	/* PD13 */ {   0,   0,   0,   0,   0,   0   }, /* PD13 */
 	/* PD12 */ {   0,   0,   0,   0,   0,   0   }, /* PD12 */
-	/* PD11 */ {   0,   0,   0,   0,   0,   0   }, /* PD11 */
-	/* PD10 */ {   0,   0,   0,   0,   0,   0   }, /* PD10 */
-	/* PD9  */ {   0,   1,   0,   1,   0,   0   }, /* SMC1 TXD */
-	/* PD8  */ {   0,   1,   0,   0,   0,   0   }, /* SMC1 RXD */
+	/* PD11 */ {   1,   0,   0,   1,   0,   0   }, /* PD11 MDIO */
+	/* PD10 */ {   1,   0,   0,   1,   0,   0   }, /* PD10 MDC */
+	/* PD9  */ {   1,   1,   0,   1,   0,   0   }, /* SMC1 TXD */
+	/* PD8  */ {   1,   1,   0,   0,   0,   0   }, /* SMC1 RXD */
 	/* PD7  */ {   0,   0,   0,   1,   0,   1   }, /* PD7 */
 	/* PD6  */ {   0,   0,   0,   1,   0,   1   }, /* PD6 */
 	/* PD5  */ {   0,   0,   0,   1,   0,   1   }, /* PD5 */
@@ -223,6 +235,7 @@ const iop_conf_t iop_conf_tab[4][32] = {
 
 void reset_phy (void)
 {
+#if 0		// by milo
 	vu_long *bcsr = (vu_long *)CONFIG_SYS_BCSR;
 
 	/* Reset the PHY */
@@ -236,6 +249,7 @@ void reset_phy (void)
 	bcsr[3] |=  FETH2_RST;
 #endif /* CONFIG_SYS_PHY_ADDR == 0 */
 	udelay(1000);
+#endif
 #ifdef CONFIG_MII
 #if CONFIG_ADSTYPE >= CONFIG_SYS_PQ2FADS
 	/*
@@ -253,14 +267,37 @@ void reset_phy (void)
 	 * restart autonegotiation.
 	 */
 
+#ifdef CONFIG_ETHER_ON_FCC1
 	/* Advertise all capabilities */
-	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR, MII_ADVERTISE, 0x01E1);
+	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR1, MII_ADVERTISE, 0x01E1);
 
 	/* Do not bypass Rx/Tx (de)scrambler */
-	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR, MII_FCSCOUNTER,  0x0000);
+	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR1, MII_FCSCOUNTER,  0x0000);
 
-	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR, MII_BMCR,
+	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR1, MII_BMCR,
 			BMCR_ANENABLE | BMCR_ANRESTART);
+#endif
+#ifdef CONFIG_ETHER_ON_FCC2
+	/* Advertise all capabilities */
+	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR2, MII_ADVERTISE, 0x01E1);
+
+	/* Do not bypass Rx/Tx (de)scrambler */
+	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR2, MII_FCSCOUNTER,  0x0000);
+
+	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR2, MII_BMCR,
+			BMCR_ANENABLE | BMCR_ANRESTART);
+#endif
+#ifdef CONFIG_ETHER_ON_FCC3
+	/* Advertise all capabilities */
+	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR3, MII_ADVERTISE, 0x01E1);
+
+	/* Do not bypass Rx/Tx (de)scrambler */
+	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR3, MII_FCSCOUNTER,  0x0000);
+
+	bb_miiphy_write(NULL, CONFIG_SYS_PHY_ADDR3, MII_BMCR,
+			BMCR_ANENABLE | BMCR_ANRESTART);
+#endif
+
 #endif /* CONFIG_ADSTYPE == CONFIG_SYS_PQ2FADS */
 #endif /* CONFIG_MII */
 }
@@ -274,7 +311,9 @@ typedef struct pci_ic_s {
 
 int board_early_init_f (void)
 {
+#if 0
 	vu_long *bcsr = (vu_long *)CONFIG_SYS_BCSR;
+#endif
 
 #ifdef CONFIG_PCI
 	volatile pci_ic_t* pci_ic = (pci_ic_t *) CONFIG_SYS_PCI_INT;
@@ -282,6 +321,7 @@ int board_early_init_f (void)
 	/* mask alll the PCI interrupts */
 	pci_ic->pci_int_mask |= 0xfff00000;
 #endif
+#if 0
 #if (CONFIG_CONS_INDEX == 1) || (CONFIG_KGDB_INDEX == 1)
 	bcsr[1] &= ~RS232EN_1;
 #endif
@@ -302,6 +342,7 @@ int board_early_init_f (void)
 			| SIUMCR_LBPC01;
 	}
 #endif /* CONFIG_ADSTYPE != CONFIG_SYS_8260ADS */
+#endif
 
 	return 0;
 }
@@ -315,7 +356,7 @@ phys_size_t initdram (int board_type)
 #elif CONFIG_ADSTYPE == CONFIG_SYS_8272ADS
 	long int msize = 64;
 #else
-	long int msize = 16;
+	long int msize = 128;
 #endif
 
 #ifndef CONFIG_SYS_RAMBOOT
@@ -498,13 +539,13 @@ phys_size_t initdram (int board_type)
 #endif /* SPD_DEBUG */
 	}
 #else  /* !CONFIG_SPD_EEPROM */
-	or    = CONFIG_SYS_OR2;
+	or    = CONFIG_SYS_OR1;
 	psdmr = CONFIG_SYS_PSDMR;
 	psrt  = CONFIG_SYS_PSRT;
 #endif /* CONFIG_SPD_EEPROM */
 	memctl->memc_psrt = psrt;
-	memctl->memc_or2 = or;
-	memctl->memc_br2 = CONFIG_SYS_SDRAM_BASE | 0x00000041;
+	memctl->memc_or1 = or;
+	memctl->memc_br1 = CONFIG_SYS_SDRAM_BASE | 0x00000041;
 	ramaddr = (uchar *) CONFIG_SYS_SDRAM_BASE;
 	memctl->memc_psdmr = psdmr | 0x28000000;	/* Precharge all banks */
 	*ramaddr = c;

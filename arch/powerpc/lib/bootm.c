@@ -325,6 +325,8 @@ int do_bootm_linux(int flag, int argc, char * const argv[], bootm_headers_t *ima
 {
 	int	ret;
 
+	NetLoop(INITLINK);
+
 	if (flag & BOOTM_STATE_OS_CMDLINE) {
 		boot_cmdline_linux(images);
 		return 0;

@@ -102,8 +102,8 @@
  * ports on the motherboard which are used for the serial console - see
  * cogent/cma101/serial.[ch]).
  */
-#undef	CONFIG_CONS_ON_SMC		/* define if console on SMC */
-#define CONFIG_CONS_ON_SCC		/* define if console on SCC */
+#define	CONFIG_CONS_ON_SMC		/* define if console on SMC */
+#undef CONFIG_CONS_ON_SCC		/* define if console on SCC */
 #undef	CONFIG_CONS_NONE		/* define if console on something else */
 #define CONFIG_CONS_INDEX	1	/* which serial channel for console */
 
@@ -123,27 +123,15 @@
 
 #ifdef CONFIG_ETHER_ON_FCC
 
-#define CONFIG_ETHER_INDEX	2	/* which SCC/FCC channel for ethernet */
-
-#if   CONFIG_ETHER_INDEX == 1
-
-# define CONFIG_SYS_PHY_ADDR		0
-# define CONFIG_SYS_CMXFCR_VALUE1	(CMXFCR_RF1CS_CLK11 | CMXFCR_TF1CS_CLK10)
-# define CONFIG_SYS_CMXFCR_MASK1	(CMXFCR_FC1 | CMXFCR_RF1CS_MSK | CMXFCR_TF1CS_MSK)
-
-#elif CONFIG_ETHER_INDEX == 2
-
-#if CONFIG_ADSTYPE == CONFIG_SYS_8272ADS	/* RxCLK is CLK15, TxCLK is CLK16 */
-# define CONFIG_SYS_PHY_ADDR		3
-# define CONFIG_SYS_CMXFCR_VALUE2	(CMXFCR_RF2CS_CLK15 | CMXFCR_TF2CS_CLK16)
-#else					/* RxCLK is CLK13, TxCLK is CLK14 */
-# define CONFIG_SYS_PHY_ADDR		0
-# define CONFIG_SYS_CMXFCR_VALUE2	(CMXFCR_RF2CS_CLK13 | CMXFCR_TF2CS_CLK14)
-#endif /* CONFIG_ADSTYPE == CONFIG_SYS_8272ADS */
-
+# define CONFIG_ETHER_ON_FCC2
+# define CONFIG_SYS_PHY_ADDR2		3
+# define CONFIG_SYS_CMXFCR_VALUE2	(CMXFCR_RF2CS_CLK14 | CMXFCR_TF2CS_CLK13)
 # define CONFIG_SYS_CMXFCR_MASK2	(CMXFCR_FC2 | CMXFCR_RF2CS_MSK | CMXFCR_TF2CS_MSK)
 
-#endif	/* CONFIG_ETHER_INDEX */
+# define CONFIG_ETHER_ON_FCC3
+# define CONFIG_SYS_PHY_ADDR3		3
+# define CONFIG_SYS_CMXFCR_VALUE3	(CMXFCR_RF3CS_CLK16 | CMXFCR_TF3CS_CLK15)
+# define CONFIG_SYS_CMXFCR_MASK3	(CMXFCR_FC3 | CMXFCR_RF3CS_MSK | CMXFCR_TF3CS_MSK)
 
 #define CONFIG_SYS_CPMFCR_RAMTYPE	0		/* BDs and buffers on 60x bus */
 #define CONFIG_SYS_FCC_PSMR		(FCC_PSMR_FDE | FCC_PSMR_LPB)  /* Full duplex */
@@ -153,7 +141,7 @@
 /*
  * GPIO pins used for bit-banged MII communications
  */
-#define MDIO_PORT	2		/* Port C */
+#define MDIO_PORT	3		/* Port D */
 #define MDIO_DECLARE	volatile ioport_t *iop = ioport_addr ( \
 				(immap_t *) CONFIG_SYS_IMMR, MDIO_PORT )
 #define MDC_DECLARE	MDIO_DECLARE
@@ -162,8 +150,8 @@
 #define CONFIG_SYS_MDIO_PIN	0x00002000	/* PC18 */
 #define CONFIG_SYS_MDC_PIN	0x00001000	/* PC19 */
 #else
-#define CONFIG_SYS_MDIO_PIN	0x00400000	/* PC9	*/
-#define CONFIG_SYS_MDC_PIN	0x00200000	/* PC10 */
+#define CONFIG_SYS_MDIO_PIN	0x00100000	/* PD11	*/
+#define CONFIG_SYS_MDC_PIN	0x00200000	/* PD10 */
 #endif /* CONFIG_ADSTYPE == CONFIG_SYS_8272ADS */
 
 #define MDIO_ACTIVE	(iop->pdir |=  CONFIG_SYS_MDIO_PIN)
@@ -208,7 +196,7 @@
 #if CONFIG_ADSTYPE >= CONFIG_SYS_PQ2FADS
 #define CONFIG_8260_CLKIN	100000000	/* in Hz */
 #else
-#define CONFIG_8260_CLKIN	66000000	/* in Hz */
+#define CONFIG_8260_CLKIN	66600000	/* in Hz */
 #endif
 #endif
 
@@ -298,7 +286,7 @@
 #define CONFIG_SYS_BARGSIZE	CONFIG_SYS_CBSIZE	/* Boot Argument Buffer Size	*/
 
 #define CONFIG_SYS_MEMTEST_START	0x00100000	/* memtest works on */
-#define CONFIG_SYS_MEMTEST_END		0x00f00000	/* 1 ... 15 MB in DRAM	*/
+#define CONFIG_SYS_MEMTEST_END		0x80000000	/* 1 ... 128 MB in DRAM	*/
 
 #define CONFIG_SYS_LOAD_ADDR		0x400000	/* default load address */
 
@@ -306,15 +294,19 @@
 
 #define CONFIG_SYS_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200, 230400 }
 
-#define CONFIG_SYS_FLASH_BASE		0xff800000
+#define CONFIG_SYS_FLASH_BASE		0xfff00000
+#define CONFIG_SYS_FLASH_BASE2		0xf0000000
 #define CONFIG_SYS_MAX_FLASH_BANKS	1	/* max num of memory banks	*/
-#define CONFIG_SYS_MAX_FLASH_SECT	32	/* max num of sects on one chip */
+#define CONFIG_SYS_MAX_FLASH_SECT	128	/* max num of sects on one chip */
 #define CONFIG_SYS_FLASH_SIZE		8
 #define CONFIG_SYS_FLASH_ERASE_TOUT	8000	/* Timeout for Flash Erase (in ms)    */
 #define CONFIG_SYS_FLASH_WRITE_TOUT	5	/* Timeout for Flash Write (in ms)    */
 #define CONFIG_SYS_FLASH_LOCK_TOUT	5	/* Timeout for Flash Set Lock Bit (in ms) */
 #define CONFIG_SYS_FLASH_UNLOCK_TOUT	10000	/* Timeout for Flash Clear Lock Bits (in ms) */
 #define CONFIG_SYS_FLASH_PROTECTION		/* "Real" (hardware) sectors protection */
+#define CONFIG_SYS_FLASH_CFI
+#define CONFIG_FLASH_CFI_DRIVER
+#define CONFIG_SYS_FLASH_BANKS_LIST	{CONFIG_SYS_FLASH_BASE2}
 
 /*
  * JFFS2 partitions
@@ -330,13 +322,11 @@
 #define CONFIG_SYS_DEFAULT_IMMR	0x0F010000
 #endif
 
-#define CONFIG_SYS_IMMR		0xF0000000
-#define CONFIG_SYS_BCSR		0xF4500000
+#define CONFIG_SYS_IMMR		0xe0000000
 #if CONFIG_ADSTYPE >= CONFIG_SYS_PQ2FADS
 #define CONFIG_SYS_PCI_INT		0xF8200000
 #endif
 #define CONFIG_SYS_SDRAM_BASE		0x00000000
-#define CONFIG_SYS_LSDRAM_BASE		0xFD000000
 
 #define RS232EN_1		0x02000002
 #define RS232EN_2		0x01000001
@@ -344,7 +334,6 @@
 #define FETH1_RST		0x04000004
 #define FETHIEN2		0x10000000
 #define FETH2_RST		0x08000000
-#define BCSR_PCI_MODE		0x01000000
 
 #define CONFIG_SYS_INIT_RAM_ADDR	CONFIG_SYS_IMMR
 #define CONFIG_SYS_INIT_RAM_SIZE	0x2000	/* Size of used area in DPRAM	*/
@@ -359,11 +348,11 @@
 			    ( HRCW_CS10PC01 | HRCW_MODCK_H0101 )	     \
 			)
 #else
-/* PQ2FADS BCSR HRCW = 0x0CB23645 */
-#define CONFIG_SYS_HRCW_MASTER (   ( HRCW_BPS11 | HRCW_CIP )			    |\
-			    ( HRCW_L2CPC10 | HRCW_DPPC10 | HRCW_ISB010 )    |\
-			    ( HRCW_BMS | HRCW_APPC10 )			    |\
-			    ( HRCW_MODCK_H0101 )			     \
+/* PQ2FADS BCSR HRCW = 0x06B2B645 */
+#define CONFIG_SYS_HRCW_MASTER (   ( HRCW_BPS01 | HRCW_CIP )			    |\
+			    ( HRCW_L2CPC10 | HRCW_DPPC11 | HRCW_ISB010 )    |\
+			    ( HRCW_BMS | HRCW_MMR11 | HRCW_LBPC01 | HRCW_APPC10 )   |\
+			    ( HRCW_CS10PC01 | HRCW_MODCK_H0101 )			     \
 			)
 #endif
 /* no slaves */
@@ -381,7 +370,7 @@
 #   define CONFIG_SYS_RAMBOOT
 #endif
 
-#define CONFIG_SYS_MONITOR_LEN		(256 << 10)	/* Reserve 256 kB for Monitor	*/
+#define CONFIG_SYS_MONITOR_LEN		(512 << 10)	/* Reserve 512 kB for Monitor	*/
 #define CONFIG_SYS_BOOTMAPSZ		(8 << 20)	/* Initial Memory map for Linux */
 
 #ifdef CONFIG_BZIP2
@@ -392,8 +381,8 @@
 
 #ifndef CONFIG_SYS_RAMBOOT
 #  define CONFIG_ENV_IS_IN_FLASH	1
-#  define CONFIG_ENV_SECT_SIZE	0x40000
-#  define CONFIG_ENV_ADDR		(CONFIG_SYS_MONITOR_BASE + CONFIG_ENV_SECT_SIZE)
+#  define CONFIG_ENV_SECT_SIZE		0x40000
+#  define CONFIG_ENV_ADDR		(CONFIG_SYS_FLASH_BASE2)
 #else
 #  define CONFIG_ENV_IS_IN_NVRAM	1
 #  define CONFIG_ENV_ADDR		(CONFIG_SYS_MONITOR_BASE - 0x1000)
@@ -412,12 +401,12 @@
 
 #define CONFIG_SYS_SYPCR		0xFFFFFFC3
 #define CONFIG_SYS_BCR			0x100C0000
-#define CONFIG_SYS_SIUMCR		0x0A200000
-#define CONFIG_SYS_SCCR		SCCR_DFBRG01
-#define CONFIG_SYS_BR0_PRELIM		(CONFIG_SYS_FLASH_BASE | 0x00001801)
-#define CONFIG_SYS_OR0_PRELIM		0xFF800876
-#define CONFIG_SYS_BR1_PRELIM		(CONFIG_SYS_BCSR | 0x00001801)
-#define CONFIG_SYS_OR1_PRELIM		0xFFFF8010
+#define CONFIG_SYS_SIUMCR		0x0a64c000
+#define CONFIG_SYS_SCCR			SCCR_DFBRG01
+#define CONFIG_SYS_BR0_PRELIM		(CONFIG_SYS_FLASH_BASE | 0x00000801)
+#define CONFIG_SYS_OR0_PRELIM		0xfff00ef6		// 1MB
+#define CONFIG_SYS_BR8_PRELIM		(CONFIG_SYS_FLASH_BASE2 | 0x00001801)
+#define CONFIG_SYS_OR8_PRELIM		0xfe000ef6		// 32MB
 
 /*We need to configure chip select to use CPLD PCI IC on MPC8272ADS*/
 
@@ -451,11 +440,10 @@
 #define CONFIG_SYS_PSRT		0x13
 #define CONFIG_SYS_MPTPR		0x2800
 #else
-#define CONFIG_SYS_OR2			0xFF000CA0
-#define CONFIG_SYS_PSDMR		0x016EB452
-#define CONFIG_SYS_PSRT		0x21
+#define CONFIG_SYS_OR1			0xf8002900
+#define CONFIG_SYS_PSDMR		0x8431a463
+#define CONFIG_SYS_PSRT			0x79
 #define CONFIG_SYS_LSDMR		0x0086A522
-#define CONFIG_SYS_LSRT		0x21
 #define CONFIG_SYS_MPTPR		0x1900
 #endif /* CONFIG_ADSTYPE == CONFIG_SYS_PQ2FADS */
 
@@ -529,41 +517,4 @@
 #endif
 
 #define CONFIG_NETDEV eth0
-#define CONFIG_LOADADDR 500000 /* default location for tftp and bootm */
-
-#define CONFIG_EXTRA_ENV_SETTINGS \
-	"netdev=" __stringify(CONFIG_NETDEV) "\0"			\
-	"tftpflash=tftpboot $loadaddr $uboot; "				\
-		"protect off " __stringify(CONFIG_SYS_TEXT_BASE)	\
-			" +$filesize; "	\
-		"erase " __stringify(CONFIG_SYS_TEXT_BASE) " +$filesize; " \
-		"cp.b $loadaddr " __stringify(CONFIG_SYS_TEXT_BASE)	\
-			" $filesize; "	\
-		"protect on " __stringify(CONFIG_SYS_TEXT_BASE)		\
-			" +$filesize; "	\
-		"cmp.b $loadaddr " __stringify(CONFIG_SYS_TEXT_BASE)	\
-			" $filesize\0"	\
-	"fdtaddr=400000\0"						\
-	"console=ttyCPM0\0"						\
-	"setbootargs=setenv bootargs "					\
-		"root=$rootdev rw console=$console,$baudrate $othbootargs\0" \
-	"setipargs=setenv bootargs nfsroot=$serverip:$rootpath "	 \
-		"ip=$ipaddr:$serverip:$gatewayip:$netmask:$hostname:$netdev:off " \
-		"root=$rootdev rw console=$console,$baudrate $othbootargs\0"
-
-#define CONFIG_NFSBOOTCOMMAND						\
-	"setenv rootdev /dev/nfs;"					\
-	"run setipargs;"						\
-	"tftp $loadaddr $bootfile;"					\
-	"tftp $fdtaddr $fdtfile;"					\
-	"bootm $loadaddr - $fdtaddr"
-
-#define CONFIG_RAMBOOTCOMMAND						\
-	"setenv rootdev /dev/ram;"					\
-	"run setbootargs;"						\
-	"tftp $ramdiskaddr $ramdiskfile;"				\
-	"tftp $loadaddr $bootfile;"					\
-	"tftp $fdtaddr $fdtfile;"					\
-	"bootm $loadaddr $ramdiskaddr $fdtaddr"
-
 #endif /* __CONFIG_H */

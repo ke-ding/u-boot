@@ -323,6 +323,35 @@ int NetLoop(enum proto_t protocol)
 	bd_t *bd = gd->bd;
 	int ret = -1;
 
+	if (protocol == INITLINK)
+	{
+		bd_t *bd = gd->bd;
+		char *act_save;
+
+		net_init();
+
+		act_save = getenv("ethact");
+
+		setenv("ethact", "FCC2");
+		eth_halt();
+		eth_set_current();
+		if (eth_init(bd) < 0) {
+			eth_halt();
+			return -1;
+		}
+		setenv("ethact", "FCC3");
+		eth_halt();
+		eth_set_current();
+		if (eth_init(bd) < 0) {
+			eth_halt();
+			return -1;
+		}
+
+		setenv("ethact", act_save);
+
+		return 0;
+	}
+
 	NetRestarted = 0;
 	NetDevExists = 0;
 	NetTryCount = 1;
