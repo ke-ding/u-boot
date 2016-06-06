@@ -107,6 +107,8 @@
 #undef	CONFIG_CONS_NONE		/* define if console on something else */
 #define CONFIG_CONS_INDEX	1	/* which serial channel for console */
 
+# define CONFIG_FPGA_ON_FCC1
+
 /*
  * select ethernet configuration
  *

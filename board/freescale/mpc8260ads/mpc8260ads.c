@@ -58,7 +58,7 @@
  * according to the five values podr/pdir/ppar/psor/pdat for that entry
  */
 
-#ifdef CONFIG_ETHER_ON_FCC1
+#ifdef CONFIG_FPGA_ON_FCC1
 #define CONFIG_SYS_FCC1	1
 #else
 #define CONFIG_SYS_FCC1	0
@@ -78,24 +78,24 @@ const iop_conf_t iop_conf_tab[4][32] = {
 
     /* Port A configuration */
     {	/*	      conf      ppar psor pdir podr pdat */
-	/* PA31 */ { CONFIG_SYS_FCC1,   1,   1,   0,   0,   0 }, /* FCC1 MII COL   */
-	/* PA30 */ { CONFIG_SYS_FCC1,   1,   1,   0,   0,   0 }, /* FCC1 MII CRS   */
-	/* PA29 */ { CONFIG_SYS_FCC1,   1,   1,   1,   0,   0 }, /* FCC1 MII TX_ER */
-	/* PA28 */ { CONFIG_SYS_FCC1,   1,   1,   1,   0,   0 }, /* FCC1 MII TX_EN */
-	/* PA27 */ { CONFIG_SYS_FCC1,   1,   1,   0,   0,   0 }, /* FCC1 MII RX_DV */
-	/* PA26 */ { CONFIG_SYS_FCC1,   1,   1,   0,   0,   0 }, /* FCC1 MII RX_ER */
+	/* PA31 */ { 0,          0,   0,   0,   0,   0 }, /* PA31 */
+	/* PA30 */ {CONFIG_SYS_FCC1,1,1,   1,   0,   0 }, /* FCC1 RTS */
+	/* PA29 */ { 0,          0,   1,   1,   0,   0 }, /* PA29 */
+	/* PA28 */ { 0,          0,   1,   1,   0,   0 }, /* PA28 */
+	/* PA27 */ { 0,          0,   1,   0,   0,   0 }, /* PA27 */
+	/* PA26 */ { 0,          0,   1,   0,   0,   0 }, /* PA26 */
 	/* PA25 */ { 0,          0,   0,   0,   0,   0 }, /* PA25 */
 	/* PA24 */ { 0,          0,   0,   0,   0,   0 }, /* PA24 */
 	/* PA23 */ { 0,          0,   0,   0,   0,   0 }, /* PA23 */
 	/* PA22 */ { 0,          0,   0,   0,   0,   0 }, /* PA22 */
-	/* PA21 */ { CONFIG_SYS_FCC1,   1,   0,   1,   0,   0 }, /* FCC1 MII TxD[3] */
-	/* PA20 */ { CONFIG_SYS_FCC1,   1,   0,   1,   0,   0 }, /* FCC1 MII TxD[2] */
-	/* PA19 */ { CONFIG_SYS_FCC1,   1,   0,   1,   0,   0 }, /* FCC1 MII TxD[1] */
-	/* PA18 */ { CONFIG_SYS_FCC1,   1,   0,   1,   0,   0 }, /* FCC1 MII TxD[0] */
-	/* PA17 */ { CONFIG_SYS_FCC1,   1,   0,   0,   0,   0 }, /* FCC1 MII RxD[0] */
-	/* PA16 */ { CONFIG_SYS_FCC1,   1,   0,   0,   0,   0 }, /* FCC1 MII RxD[1] */
-	/* PA15 */ { CONFIG_SYS_FCC1,   1,   0,   0,   0,   0 }, /* FCC1 MII RxD[2] */
-	/* PA14 */ { CONFIG_SYS_FCC1,   1,   0,   0,   0,   0 }, /* FCC1 MII RxD[3] */
+	/* PA21 */ { 0,          0,   0,   1,   0,   0 }, /* PA21 */
+	/* PA20 */ { 0,          0,   0,   1,   0,   0 }, /* PA20 */
+	/* PA19 */ { 0,          0,   0,   1,   0,   0 }, /* PA19 */
+	/* PA18 */ {CONFIG_SYS_FCC1,1,0,   1,   0,   0 }, /* FCC1 TxD */
+	/* PA17 */ {CONFIG_SYS_FCC1,1,0,   0,   0,   0 }, /* FCC1 RxD */
+	/* PA16 */ { 0,          0,   0,   0,   0,   0 }, /* PA16 */
+	/* PA15 */ { 0,          0,   0,   0,   0,   0 }, /* PA15 */
+	/* PA14 */ { 0,          0,   0,   0,   0,   0 }, /* PA14 */
 	/* PA13 */ { 0,          0,   0,   0,   0,   0 }, /* PA13 */
 	/* PA12 */ { 0,          0,   0,   0,   0,   0 }, /* PA12 */
 	/* PA11 */ { 0,          0,   0,   0,   0,   0 }, /* PA11 */
@@ -158,9 +158,9 @@ const iop_conf_t iop_conf_tab[4][32] = {
 	/* PC26 */ { 0,          0,   0,   0,   0,   0 }, /* PC26 */
 	/* PC25 */ { 0,          0,   0,   0,   0,   0 }, /* PC25 */
 	/* PC24 */ { 0,          0,   0,   0,   0,   0 }, /* PC24 */
-	/* PC23 */ { 0,          0,   0,   0,   0,   0 }, /* PC23 */
-	/* PC22 */ { CONFIG_SYS_FCC1,   1,   0,   0,   0,   0 }, /* FCC1 MII Tx Clock (CLK10) */
-	/* PC21 */ { CONFIG_SYS_FCC1,   1,   0,   0,   0,   0 }, /* FCC1 MII Rx Clock (CLK11) */
+	/* PC23 */ {CONFIG_SYS_FCC1,1,0,   0,   0,   0 }, /* FCC1 RCLK(CLK9) */
+	/* PC22 */ {CONFIG_SYS_FCC1,1,0,   0,   0,   0 }, /* FCC1 TCLK(CLK10) */
+	/* PC21 */ { 0,          0,   0,   0,   0,   0 }, /* PC21 */
 	/* PC20 */ { 0,          0,   0,   0,   0,   0 }, /* PC20 */
 #if CONFIG_ADSTYPE == CONFIG_SYS_8272ADS
 	/* PC19 */ { 1,          0,   0,   1,   0,   0 }, /* FETHMDC  */
@@ -186,8 +186,8 @@ const iop_conf_t iop_conf_tab[4][32] = {
 	/* PC9  */ { 1,          0,   0,   0,   0,   0 }, /* FETHMDIO */
 #endif /* CONFIG_ADSTYPE == CONFIG_SYS_8272ADS */
 	/* PC8  */ { 0,          0,   0,   0,   0,   0 }, /* PC8 */
-	/* PC7  */ { 0,          0,   0,   0,   0,   0 }, /* PC7 */
-	/* PC6  */ { 0,          0,   0,   0,   0,   0 }, /* PC6 */
+	/* PC7  */ {CONFIG_SYS_FCC1,1,0,   0,   0,   0 }, /* FCC1 CTS */
+	/* PC6  */ {CONFIG_SYS_FCC1,1,0,   0,   0,   0 }, /* FCC1 CD */
 	/* PC5  */ { 0,          0,   0,   0,   0,   0 }, /* PC5 */
 	/* PC4  */ { 0,          0,   0,   0,   0,   0 }, /* PC4 */
 	/* PC3  */ { 0,          0,   0,   0,   0,   0 }, /* PC3 */
