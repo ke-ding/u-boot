@@ -128,20 +128,20 @@ const iop_conf_t iop_conf_tab[4][32] = {
 	/* PB20 */ { CONFIG_SYS_FCC2,   1,   0,   0,   0,   0 }, /* FCC2 MII RxD[1] */
 	/* PB19 */ { CONFIG_SYS_FCC2,   1,   0,   0,   0,   0 }, /* FCC2 MII RxD[2] */
 	/* PB18 */ { CONFIG_SYS_FCC2,   1,   0,   0,   0,   0 }, /* FCC2 MII RxD[3] */
-	/* PB17 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3:RX_DIV */
-	/* PB16 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3:RX_ERR */
-	/* PB15 */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3:TX_ERR */
-	/* PB14 */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3:TX_EN */
-	/* PB13 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3:COL */
-	/* PB12 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3:CRS */
-	/* PB11 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3:RXD */
-	/* PB10 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3:RXD */
-	/* PB9  */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3:RXD */
-	/* PB8  */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3:RXD */
-	/* PB7  */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3:TXD */
-	/* PB6  */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3:TXD */
-	/* PB5  */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3:TXD */
-	/* PB4  */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3:TXD */
+	/* PB17 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII RX_DV */
+	/* PB16 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII RX_ER */
+	/* PB15 */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3 MII TX_ERR */
+	/* PB14 */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3 MII TX_EN */
+	/* PB13 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII COL */
+	/* PB12 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII CRS */
+	/* PB11 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII RxD[3] */
+	/* PB10 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII RxD[2] */
+	/* PB9  */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII RxD[1] */
+	/* PB8  */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII RxD[0] */
+	/* PB7  */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3 MII TxD[0] */
+	/* PB6  */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3 MII TxD[1] */
+	/* PB5  */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3 MII TxD[2] */
+	/* PB4  */ { CONFIG_SYS_FCC3,   1,   0,   1,   0,   0 }, /* FCC3 MII TxD[3] */
 	/* PB3  */ { 0,          0,   0,   0,   0,   0 }, /* pin doesn't exist */
 	/* PB2  */ { 0,          0,   0,   0,   0,   0 }, /* pin doesn't exist */
 	/* PB1  */ { 0,          0,   0,   0,   0,   0 }, /* pin doesn't exist */
@@ -171,7 +171,7 @@ const iop_conf_t iop_conf_tab[4][32] = {
 	/* PC19 */ { CONFIG_SYS_FCC2,   1,   0,   0,   0,   0 }, /* FCC2 MII Rx Clock (CLK13) */
 	/* PC18 */ { CONFIG_SYS_FCC2,   1,   0,   0,   0,   0 }, /* FCC2 MII Tx Clock (CLK14) */
 	/* PC17 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII Rx Clock (CLK15) */
-	/* PC16 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC4 MII Tx Clock (CLK16) */
+	/* PC16 */ { CONFIG_SYS_FCC3,   1,   0,   0,   0,   0 }, /* FCC3 MII Tx Clock (CLK16) */
 #endif /* CONFIG_ADSTYPE == CONFIG_SYS_8272ADS */
 	/* PC15 */ { 1,          1,   0,   0,   0,   0 }, /* SCC1 CTS */
 	/* PC14 */ { 1,          1,   0,   0,   0,   0 }, /* SCC1 CD */
