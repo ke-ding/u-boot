@@ -182,6 +182,180 @@ static int mpc8260_smc_serial_init(void)
 	/* Enable transmitter/receiver. */
 	sp->smc_smcmr |= SMCMR_REN | SMCMR_TEN;
 
+#ifdef CONFIG_INIT_SMC1
+#define SMC_INDEX1		0
+#define PROFF_SMC_BASE1		PROFF_SMC1_BASE
+#define CPM_CR_SMC_PAGE1	CPM_CR_SMC1_PAGE
+#define CPM_CR_SMC_SBLOCK1	CPM_CR_SMC1_SBLOCK
+#define CMXSMR_MASK1		(CMXSMR_SMC1|CMXSMR_SMC1CS_MSK)
+#define CMXSMR_VALUE1		CMXSMR_SMC1CS_BRG7
+
+	sp = (smc_t *) &(im->im_smc[SMC_INDEX1]);
+	*(ushort *)(&im->im_dprambase[PROFF_SMC_BASE1]) = PROFF_SMC1;
+	up = (smc_uart_t *)&im->im_dprambase[PROFF_SMC1];
+
+	/* Disable transmitter/receiver. */
+	sp->smc_smcmr &= ~(SMCMR_REN | SMCMR_TEN);
+
+	/* NOTE: I/O port pins are set up via the iop_conf_tab[] table */
+
+	/* Allocate space for two buffer descriptors in the DP ram.
+	 * damm: allocating space after the two buffers for rx/tx data
+	 */
+
+	/* allocate size of struct serialbuffer with bd rx/tx,
+	 * buffer rx/tx and rx index
+	 */
+	dpaddr = m8260_cpm_dpalloc((sizeof(serialbuffer_t)), 16);
+
+	rtx = (serialbuffer_t *)&im->im_dprambase[dpaddr];
+
+	/* Set the physical address of the host memory buffers in
+	 * the buffer descriptors.
+	 */
+	rtx->rxbd.cbd_bufaddr = (uint) &rtx->rxbuf;
+	rtx->rxbd.cbd_sc      = 0;
+
+	rtx->txbd.cbd_bufaddr = (uint) &rtx->txbuf;
+	rtx->txbd.cbd_sc      = 0;
+
+	/* Set up the uart parameters in the parameter ram. */
+	up->smc_rbase = dpaddr;
+	up->smc_tbase = dpaddr+sizeof(cbd_t);
+	up->smc_rfcr = CPMFCR_EB;
+	up->smc_tfcr = CPMFCR_EB;
+	up->smc_brklen = 0;
+	up->smc_brkec = 0;
+	up->smc_brkcr = 0;
+
+	/* Set UART mode, 8 bit, no parity, one stop.
+	 * Enable receive and transmit.
+	 */
+	sp->smc_smcmr = smcr_mk_clen(9) |  SMCMR_SM_UART;
+
+	/* Mask all interrupts and remove anything pending. */
+	sp->smc_smcm = 0;
+	sp->smc_smce = 0xff;
+
+	/* put the SMC channel into NMSI (non multiplexd serial interface)
+	 * mode and wire either BRG7 to SMC1 or BRG8 to SMC2 (15-17).
+	 */
+	im->im_cpmux.cmx_smr = (im->im_cpmux.cmx_smr&~(CMXSMR_MASK|CMXSMR_MASK1))|(CMXSMR_VALUE|CMXSMR_VALUE1);
+
+	/* Set up the baud rate generator. */
+	//TODO:enable this?//serial_setbrg ();
+
+	/* Make the first buffer the only buffer. */
+	rtx->txbd.cbd_sc |= BD_SC_WRAP;
+	rtx->rxbd.cbd_sc |= BD_SC_EMPTY | BD_SC_WRAP;
+
+	/* single/multi character receive. */
+	up->smc_mrblr = CONFIG_SYS_SMC_RXBUFLEN;
+	up->smc_maxidl = CONFIG_SYS_MAXIDLE;
+	rtx->rxindex = 0;
+
+	/* Initialize Tx/Rx parameters. */
+
+	while (cp->cp_cpcr & CPM_CR_FLG)  /* wait if cp is busy */
+	  ;
+
+	cp->cp_cpcr = mk_cr_cmd(CPM_CR_SMC_PAGE1, CPM_CR_SMC_SBLOCK1,
+					0, CPM_CR_INIT_TRX) | CPM_CR_FLG;
+
+	while (cp->cp_cpcr & CPM_CR_FLG)  /* wait if cp is busy */
+	  ;
+
+	/* Enable transmitter/receiver. */
+	sp->smc_smcmr |= SMCMR_REN | SMCMR_TEN;
+
+#endif
+#ifdef CONFIG_INIT_SMC2
+#define SMC_INDEX2		1
+#define PROFF_SMC_BASE2		PROFF_SMC2_BASE
+#define CPM_CR_SMC_PAGE2	CPM_CR_SMC2_PAGE
+#define CPM_CR_SMC_SBLOCK2	CPM_CR_SMC2_SBLOCK
+#define CMXSMR_MASK2		(CMXSMR_SMC2|CMXSMR_SMC2CS_MSK)
+#define CMXSMR_VALUE2		CMXSMR_SMC2CS_BRG8
+
+	sp = (smc_t *) &(im->im_smc[SMC_INDEX2]);
+	*(ushort *)(&im->im_dprambase[PROFF_SMC_BASE2]) = PROFF_SMC2;
+	up = (smc_uart_t *)&im->im_dprambase[PROFF_SMC2];
+
+	/* Disable transmitter/receiver. */
+	sp->smc_smcmr &= ~(SMCMR_REN | SMCMR_TEN);
+
+	/* NOTE: I/O port pins are set up via the iop_conf_tab[] table */
+
+	/* Allocate space for two buffer descriptors in the DP ram.
+	 * damm: allocating space after the two buffers for rx/tx data
+	 */
+
+	/* allocate size of struct serialbuffer with bd rx/tx,
+	 * buffer rx/tx and rx index
+	 */
+	dpaddr = m8260_cpm_dpalloc((sizeof(serialbuffer_t)), 16);
+
+	rtx = (serialbuffer_t *)&im->im_dprambase[dpaddr];
+
+	/* Set the physical address of the host memory buffers in
+	 * the buffer descriptors.
+	 */
+	rtx->rxbd.cbd_bufaddr = (uint) &rtx->rxbuf;
+	rtx->rxbd.cbd_sc      = 0;
+
+	rtx->txbd.cbd_bufaddr = (uint) &rtx->txbuf;
+	rtx->txbd.cbd_sc      = 0;
+
+	/* Set up the uart parameters in the parameter ram. */
+	up->smc_rbase = dpaddr;
+	up->smc_tbase = dpaddr+sizeof(cbd_t);
+	up->smc_rfcr = CPMFCR_EB;
+	up->smc_tfcr = CPMFCR_EB;
+	up->smc_brklen = 0;
+	up->smc_brkec = 0;
+	up->smc_brkcr = 0;
+
+	/* Set UART mode, 8 bit, no parity, one stop.
+	 * Enable receive and transmit.
+	 */
+	sp->smc_smcmr = smcr_mk_clen(9) |  SMCMR_SM_UART;
+
+	/* Mask all interrupts and remove anything pending. */
+	sp->smc_smcm = 0;
+	sp->smc_smce = 0xff;
+
+	/* put the SMC channel into NMSI (non multiplexd serial interface)
+	 * mode and wire either BRG7 to SMC1 or BRG8 to SMC2 (15-17).
+	 */
+	im->im_cpmux.cmx_smr = (im->im_cpmux.cmx_smr&~(CMXSMR_MASK|CMXSMR_MASK2))|(CMXSMR_VALUE|CMXSMR_VALUE2);
+
+	/* Set up the baud rate generator. */
+	//TODO:enable this?//serial_setbrg ();
+
+	/* Make the first buffer the only buffer. */
+	rtx->txbd.cbd_sc |= BD_SC_WRAP;
+	rtx->rxbd.cbd_sc |= BD_SC_EMPTY | BD_SC_WRAP;
+
+	/* single/multi character receive. */
+	up->smc_mrblr = CONFIG_SYS_SMC_RXBUFLEN;
+	up->smc_maxidl = CONFIG_SYS_MAXIDLE;
+	rtx->rxindex = 0;
+
+	/* Initialize Tx/Rx parameters. */
+
+	while (cp->cp_cpcr & CPM_CR_FLG)  /* wait if cp is busy */
+	  ;
+
+	cp->cp_cpcr = mk_cr_cmd(CPM_CR_SMC_PAGE2, CPM_CR_SMC_SBLOCK2,
+					0, CPM_CR_INIT_TRX) | CPM_CR_FLG;
+
+	while (cp->cp_cpcr & CPM_CR_FLG)  /* wait if cp is busy */
+	  ;
+
+	/* Enable transmitter/receiver. */
+	sp->smc_smcmr |= SMCMR_REN | SMCMR_TEN;
+
+#endif
 	return (0);
 }
 

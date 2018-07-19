@@ -106,6 +106,8 @@
 #undef CONFIG_CONS_ON_SCC		/* define if console on SCC */
 #undef	CONFIG_CONS_NONE		/* define if console on something else */
 #define CONFIG_CONS_INDEX	1	/* which serial channel for console */
+#define CONFIG_INIT_SMC2
+//#define CONFIG_INIT_SMC1
 
 # define CONFIG_FPGA_ON_FCC1
 
